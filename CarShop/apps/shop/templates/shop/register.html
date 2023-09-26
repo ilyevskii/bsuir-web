@@ -1,0 +1,168 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+{% load template_tools %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'css/containers.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/rows_cols.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/card.css' %}" />
+
+  <link rel="stylesheet" href="{% static 'css/form_inputs.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/links.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/button.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/checkbox.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/label.css' %}" />
+
+  <link rel="stylesheet" href="{% static 'shop/css/register_style.css' %}" />
+{% endblock %}
+
+
+{% block content %}
+  <form method="POST" class="requires-validation" novalidate>
+    {% csrf_token %}
+
+    <div class="container pt-2 pb-4">
+	  <div class="row d-flex justify-content-center">
+	    <div class="col-l-8 col-xl-6">
+		  <div class="card">
+		    <div class="py-4 px-m-5 px-4">
+			  <h3 class="mb-4 pb-0 pb-m-4 px-m-2 text-center">Registration</h3>
+
+			  <div class="px-m-2">
+			    <script src="{% static '/shop/js/validators.js' %}"></script>
+
+			    {% exec
+                   username_fieldset = ((form['username'], ""),)
+
+                   password_fieldset = (
+                       (form['password1'], ""),
+                       (form['password2'], f"""validatePasswordConfirmation(
+                                                 '{form['password1'].auto_id}',
+                                                 '{form['password2'].auto_id}')""")
+				   )
+
+                   email_fieldset = ((form['email'], ""),)
+
+                   names_fieldset = ((form['first_name'], ""),
+				                     (form['last_name'], ""))
+
+                   profile_fieldset = ((form['phone'], f"validatePhone('{form['phone'].auto_id}')"),
+				                       (form['address'], f"validateAddress('{form['address'].auto_id}')"))
+
+                   fieldsets = (
+                       username_fieldset,
+                       password_fieldset,
+                       email_fieldset,
+                       names_fieldset,
+                       profile_fieldset
+                   )
+			    %}
+
+			    {% for fieldset in fieldsets %}
+			      <div class="row">
+
+				    {% eval f"col-m-{12 // len(fieldset)} mb-4" as col_class %}
+
+				    {% for field_validator_pair in fieldset %}
+					  {% exec  field, validator = field_validator_pair %}
+
+					  <script src="{% static '/shop/js/clear_field_errors.js' %}"></script>
+
+				      <div class="{{ col_class }}">
+						{% eval field.field.widget.input_type == 'password' as is_password %}
+
+					    <label class="form-label" for="{{ field.id_for_label }}">
+						  {{ field.label }}
+						</label>
+
+					    {% if is_password %}<div class="input-group">{% endif %}
+
+						<input
+						  type="{% if is_password %}password{% else %}text{% endif %}"
+						  id="{{ field.auto_id }}"
+						  name="{{ field.name }}"
+						  value="{% if field.value %}{{ field.value }}{% endif %}"
+						  class="form-control {% if field.errors %}is-invalid{% endif %}"
+						  data-validator="{{ validator }}"
+						  oninput="clearFieldErrors(this.id)"
+						  {% if field.field.required %}required{% endif %}/>
+
+					    {% if is_password %}
+						  <script src="{% static '/shop/js/password_show_hide.js' %}"></script>
+
+						  {% eval f"{field.auto_id}_show" as id_password_show %}
+						  {% eval f"{field.auto_id}_hide" as id_password_hide %}
+
+						  <span
+						    class="input-group-text"
+						    onclick="passwordShowHide(
+							   '{{ field.auto_id }}',
+							   '{{ id_password_show }}',
+							   '{{ id_password_hide }}'
+						    );">
+
+						    <i class="fas fa-eye" id="{{ id_password_show }}"></i>
+						    <i class="fas fa-eye-slash d-none" id="{{ id_password_hide }}"></i>
+						  </span>
+					    {% endif %}
+
+					    <span class="invalid-feedback">
+						  {% for error in field.errors %}
+						    {{ error }}
+						  {% endfor %}
+					    </span>
+					  </div>
+
+				      {% if is_password %}</div>{% endif %}
+				    {% endfor %}
+			      </div>
+			    {% endfor %}
+
+				<div class="row text-center">
+				  <div class="col-m-12 mb-4">
+				    <div class="form-check justify-content-center">
+					  <input
+				    	class="form-check-input {% if form.terms_of_service_accepted.errors %}is-invalid{% endif %}"
+						type="checkbox"
+						name="{{ form.terms_of_service_accepted.name }}"
+						oninput="clearFieldErrors(this.id)"
+						id="{{ form.terms_of_service_accepted.auto_id }}"
+						required
+					    data-error-message="You must accept all terms of the user agreement.">
+
+					  <label>
+					    I agree all statements in <a href="{% url 'shop:terms_of_service' %}">Terms of service</a>
+					  </label>
+
+					  <span class="invalid-feedback">
+					    {% for error in form.terms_of_service_accepted.errors %}
+						  {{ error }}
+					    {% endfor %}
+					  </span>
+				    </div>
+				  </div>
+				</div>
+
+				<div class="row text-center">
+				  <button type="submit" class="btn-green mb-1">Register</button>
+
+				  {% if not request.user.is_authenticated %}
+				    <p class="mb-0">Already has an account? <a href="{% url 'shop:login' %}">Login</a></p>
+				  {% endif %}
+				</div>
+			  </div>
+			</div>
+		  </div>
+	    </div>
+	  </div>
+    </div>
+  </form>
+{% endblock %}
+
+{% block scripts %}
+  {{ block.super }}
+
+  <script src="{% static '/shop/js/add_presubmit_validation.js' %}"></script>
+  <script>addPresubmitValidation()</script>
+{% endblock %}

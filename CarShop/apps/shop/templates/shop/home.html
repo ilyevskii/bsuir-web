@@ -1,0 +1,65 @@
+{% extends "shop/carousel.html" %}
+{% load static %}
+
+{% block extrastyle %}
+  {{ block.super }}
+
+  <link rel="stylesheet" href="{% static 'shop/css/home_style.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/container_grid.css' %}" />
+
+  <link rel="stylesheet" href="{% static 'css/links.css' %}" />
+{% endblock %}
+
+
+{% block under_carousel %}
+  <h2 class="text-center my-5">Categories</h2>
+
+  <div class="container-grid c-m-4 c-s-3 c-2 g-m-5 g-3">
+    {% for category in categories %}
+      <div class="text-center px-1 position-relative">
+        <div>
+          <img src="{{ category.image.url }}" height="100px"/>
+          <p>{{ category.name }}</p>
+          <a class="stretched-link" href="{{ category.get_absolute_url }}"></a>
+        </div>
+      </div>
+    {% empty %}
+      <h2 class="text-center my-5">No Categories</h2>
+    {% endfor %}
+  </div>
+
+
+<h2 class="text-center my-5">News</h2>
+  {% for n in news %}
+  <dt><a href="{{ n.get_absolute_url }}">{{ n.title }}</a></dt>
+
+
+    {% empty %}
+      <dt>No news now</dt>
+    {% endfor %}
+
+<h2>Our providers</h2>
+
+{% for provider in providers %}
+    <hr>
+    <p><strong>Name:</strong> {{provider.username}}</p>
+    <p class="text-muted"><strong>Phone:</strong> {{provider.profile.phone}}</p>
+{% endfor %}
+
+  <h2>About Us!</h2>
+  <h3 style="text-align: center;">Welcome To Mater Headlight</h3>
+  <p>Mater Headlight is a Professional Shop Platform. Here we will provide you only quality accessories, which you will like very much.
+     We're dedicated to providing you the best of services, with a focus on dependability and car details.
+     We're working to turn our passion for shop into a booming online website.
+     We hope you enjoy our store as much as we enjoy offering them to you.</p>
+<p>I will keep posting more important posts on my Website for all of you. Please give your support and love.</p>
+<p style="font-weight: bold; text-align: center;">Thanks For Visiting Our Site<br><br>
+<span style="color: blue; font-size: 16px; font-weight: bold; text-align: center;">Have a nice day!</span></p>
+{% endblock %}
+
+{% block carousel_interval %}3000{% endblock %}
+
+<li class="li" data-lazy-load-enabled="1">
+
+
+</li>

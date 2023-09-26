@@ -1,0 +1,30 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% load template_tools %}
+
+{% block extrastyle %}
+  <link rel="stylesheet" href="{% static 'css/image_filters.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/carousel.css' %}" />
+{% endblock %}
+
+{% block content %}
+  {% block carousel %}
+    <div class="carousel" id="id_carousel" style="height: 350px;">
+      {% for carousel_item in carousel_items %}
+        <div class="carousel-item">
+          <img class="d-block w-100 darken-image" src="{{ carousel_item.image.url }}" style="width:100%">
+          <div class="carousel-item-text">
+            {{ carousel_item.content | safe }}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endblock %}
+
+  {% block under_carousel %}{% endblock %}
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static '/js/carousel.js' %}"></script>
+  <script>StartCarouselScrolling("id_carousel", {% block carousel_interval %}3000{% endblock %})</script>
+{% endblock %}

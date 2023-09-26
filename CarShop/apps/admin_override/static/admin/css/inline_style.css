@@ -1,0 +1,8 @@
+.inline-group h2 {
+    text-transform: unset;
+}
+
+.inline-related h3  {
+    visibility: hidden;
+    height: 0px;
+}

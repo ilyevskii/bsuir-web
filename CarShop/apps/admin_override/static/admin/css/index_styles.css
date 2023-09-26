@@ -1,0 +1,17 @@
+.colMS, .colMS * {
+    box-sizing: border-box;
+}
+
+.dashboard #content {
+    width: 100% !important;
+}
+
+#content-related {
+    float:none;
+    width: 100%;
+}
+
+#statistic .diagram {
+    width: 85%;
+    height: 93%;
+}

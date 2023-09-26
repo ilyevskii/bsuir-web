@@ -1,0 +1,148 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta name="description" content="Car shop Mater headlight">
+    {% block title %}
+      <title>Mater Headlight — Auto Detailing Supplies, Chemicals, Equipment, Accessories and more</title>
+    {% endblock %}
+
+    {% block icon %}
+      <link rel="icon" sizes="32x32" href="{% static '/shop/images/small_logo.svg' %}">
+    {% endblock %}
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+      integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+      crossorigin="anonymous" />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet" crossorigin="anonymous"
+      integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM">
+
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+      crossorigin="anonymous">
+    </script>
+
+    <link rel="stylesheet" href="{% static 'css/border_box_sizing.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/alignment.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/indentation_margin.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/indentation_padding.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/scrollbar.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/no_horizontal_scrolling.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/navigation.css' %}" />
+
+    <link rel="stylesheet" href="{% static 'shop/css/base_style.css' %}" />
+    {% block extrastyle %}{% endblock %}
+
+  </head>
+
+  <body>
+    {% block navbar %}
+      <header>
+        <nav class="navbar fixed-top navbar-expand-md navbar-dark bg-dark">
+          <div class="container">
+            {% if request.user.is_authenticated %}
+              <img src="{{ request.user.profile.avatar.url }}" height="47px"/>
+            {% else %}
+              <img src="{% static '/shop/images/small_logo.svg' %}" height="47px">
+            {% endif %}
+
+            <button
+              class="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarContent"
+              aria-controls="navbarContent"
+              aria-expanded="false">
+
+              <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarContent">
+              <ul class="navbar-nav me-auto mb-2">
+                <li class="nav-item">
+                  <a href="{% url 'shop:home' %}" class="nav-link">Home</a>
+                </li>
+                {% if request.user.is_authenticated %}
+                  <li class="nav-item">
+                    <a href="{% url 'shop:logout' %}" class="nav-link">Logout</a>
+                  </li>
+                {% else %}
+                  <li class="nav-item">
+                    <a href="{% url 'shop:login' %}" class="nav-link">Login</a>
+                  </li>
+                {% endif %}
+                <li class="nav-item">
+                  <a href="{% url 'shop:register' %}" class="nav-link">Register</a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'shop:products' %}" class="nav-link">Profile</a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'shop:products' %}" class="nav-link">Buys</a>
+                </li>
+                {% if user.is_superuser %}
+                  <li class="nav-item">
+                    <a href="{% url 'admin:index' %}" class="nav-link">Admin&nbsp;panel</a>
+                  </li>
+                {% else %}
+                  <li class="nav-item">
+                    <a href="{% url 'shop:faqs' %}" class="nav-link">FAQ</a>
+                  </li>
+                {% endif %}
+              </ul>
+
+              <form action="" class="d-flex">
+                <input type="search" placeholder="Search" class="form-control me-2">
+                <button
+                  type="button"
+                  class="btn btn-outline-warning"
+                  data-toggle="button"
+                  aria-pressed="false">
+                  Search
+                </button>
+              </form>
+            </div>
+          </div>
+        </nav>
+      </header>
+    {% endblock %}
+
+    <main style="padding-top: 50px; height:350;">
+      {% block content %}{% endblock %}
+    </main>
+
+    {% block pagination %}
+      <div class="container-fluid">
+        <div class="row">
+          {% if is_paginated %}
+            <div class="pagination">
+              <span class="page-links">
+                {% if page_obj.has_previous %}
+                  <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+                <span class="page-current">
+                  Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+                {% if page_obj.has_next %}
+                  <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
+                {% endif %}
+              </span>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    {% endblock %}
+
+    {% block scripts %}{% endblock %}
+  </body>
+</html>

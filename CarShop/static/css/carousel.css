@@ -1,0 +1,53 @@
+.carousel {
+    position: relative;
+    height:400px;
+    margin: auto;
+}
+
+
+.carousel-item {
+    display: none;
+    height: inherit;
+}
+
+.carousel-item > img,
+.carousel-item > .carousel-item-image {
+    object-fit: cover;
+    height: inherit;
+}
+
+
+.carousel-item-text {
+    color: #f2f2f2;
+    padding: 8px 12px;
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+}
+
+.carousel-item.active {
+    animation: slide-to 1000ms;
+}
+
+.carousel-item.passive {
+    animation: slide-from 1000ms;
+    transform: translateX(-100%);
+}
+
+@keyframes slide-to {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(0%);
+    }
+}
+
+@keyframes slide-from {
+    from {
+    transform: translateX(0%);
+    }
+    to {
+        transform: translateX(100%);
+    }
+}
